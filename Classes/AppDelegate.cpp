@@ -2,7 +2,7 @@
 #include "SplashScene.h"
 
 // is the game landscape or portrait (true for landscape and false for portrait)
-#define IS_LANDSCAPE false
+#define IS_LANDSCAPE true
 
 USING_NS_CC;
 
@@ -19,7 +19,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("My Game");
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) 
+	glview = GLViewImpl::create("Flappy Bird Clone. By Sonar Systems");
+#else
+	glview = GLView::create("My Game");
+#endif
         director->setOpenGLView(glview);
     }
     
@@ -143,6 +147,23 @@ bool AppDelegate::applicationDidFinishLaunching() {
         glview->setFrameSize( 768, 1024 );
         glview->setDesignResolutionSize( 768, 1024, ResolutionPolicy::NO_BORDER );
     }
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+    resDirOrders.push_back( "ipad" );
+    resDirOrders.push_back( "iphonehd5" );
+    resDirOrders.push_back( "iphonehd" );
+    resDirOrders.push_back( "iphone" );
+    
+    if ( true == IS_LANDSCAPE )
+    {
+        glview->setFrameSize( 1024, 768 );
+		glview->setDesignResolutionSize( 1024, 768, ResolutionPolicy::EXACT_FIT );
+    }
+    else
+    {
+        glview->setFrameSize( 768, 1024 );
+        glview->setDesignResolutionSize( 768, 1024, ResolutionPolicy::EXACT_FIT );
+    }
+
 #endif
     
     fileUtils->setSearchPaths(resDirOrders);
